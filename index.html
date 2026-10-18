@@ -140,51 +140,102 @@
     </div>
   </div>
 
+ 
   <script>
-    // 1. BANCO DE DATOS EN FORMATO JSON
-    // (En la versión final, esto se lee desde el archivo 'lectura.json')
-  
+  // 1. VARIABLES GLOBALES
+  let bancoLectura = [];
+  let indiceActual = 0;
 
-    // 2. FUNCIÓN PARA CARGAR LA PALABRA ACTUAL
-    function cargarEjercicio() {
-     let bancoLectura = []; 
-     let indiceActual = 0; 
-     // Cargar los datos desde el archivo externo lectura.json 
-     async function cargarBancoDatos() { 
-     try { 
-     const respuesta = await fetch('https://marissaffi.github.io/lectura.json');
-      bancoLectura = await respuesta.json(); 
-      // Una vez cargados los datos, mostramos la primera palabra 
+  // 2. FUNCIÓN DE VOZ INTERACTIVA
+  function hablar(texto) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const locucion = new SpeechSynthesisUtterance(texto);
+      locucion.lang = 'es-MX';
+      locucion.rate = 0.85;
+      locucion.pitch = 1.1;
+      window.speechSynthesis.speak(locucion);
+    }
+  }
+
+  // 3. CARGAR EL ARCHIVO JSON EXTERNO
+  async function cargarBancoDatos() {
+    try {
+      // Ruta relativa para que funcione tanto en local como en GitHub Pages
+      const respuesta = await fetch('./lectura.json');
+
+      if (!respuesta.ok) {
+        throw new Error(`No se encontró lectura.json (Error ${respuesta.status})`);
+      }
+
+      bancoLectura = await respuesta.json();
+      
+      // Mostramos la primera palabra
       cargarEjercicio();
-       }
-       catch (error) {
-        console.error("Error cargando el archivo JSON:", error); } } 
-        // Cargar palabra en la pantalla 
-        function cargarEjercicio() { 
-        if (bancoLectura.length === 0) return; 
-        const ejercicio = bancoLectura[indiceActual]; 
-        document.getElementById('categoria').innerText = ejercicio.categoria; 
-        document.getElementById('imagen-ejercicio').src = ejercicio.imagen; 
-        document.getElementById('respuesta-usuario').value = ''; document.getElementById('mensaje').innerText = ''; 
-        documentgetElementById('respuesta-usuario').focus(); } 
-        // Evaluar la respuesta del niño
-        function comprobarRespuesta() { 
-        const entrada = document.getElementById('respuesta-usuario').value.trim().toLowerCase(); 
-        const palabraCorrecta = bancoLectura[indiceActual].palabra.toLowerCase();
-         const mensajeDiv = document.getElementById('mensaje'); 
-         if (entrada === palabraCorrecta) {
-          mensajeDiv.style.color = '#385723'; 
-          mensajeDiv.innerText = '¡Muy bien! 🎉'; 
-          setTimeout(() =&gt; 
-          { indiceActual = (indiceActual + 1) % bancoLectura.length; cargarEjercicio(); }, 1200);
-           } else { mensajeDiv.style.color = '#c65911'; mensajeDiv.innerText = 'Inténtalo otra vez 💪'; } } 
-           document.getElementById('respuesta-usuario').addEventListener('keypress', function(e) { 
-           if (e.key === 'Enter') { comprobarRespuesta(); 
-           } }); // En lugar de llamar directamente a cargarEjercicio(), iniciamos la carga del JSON cargarBancoDatos();
+    } catch (error) {
+      console.error("Error cargando el archivo JSON:", error);
+      document.getElementById('mensaje').innerText = 'No se pudieron cargar las lecciones.';
+    }
+  }
 
-    // Iniciar el primer ejercicio al abrir la página
-    cargarEjercicio();
-  </script>
+  // 4. MOSTRAR EL EJERCICIO EN PANTALLA
+  function cargarEjercicio() {
+    if (bancoLectura.length === 0) return;
+
+    const ejercicio = bancoLectura[indiceActual];
+    document.getElementById('categoria').innerText = ejercicio.categoria;
+    document.getElementById('imagen-ejercicio').src = ejercicio.imagen;
+    document.getElementById('respuesta-usuario').value = '';
+    document.getElementById('mensaje').innerText = '';
+    
+    // Enfoque corregido con el punto correspondiente
+    document.getElementById('respuesta-usuario').focus();
+  }
+
+  // 5. EVALUAR LA RESPUESTA DEL NIÑO
+  function comprobarRespuesta() {
+    if (bancoLectura.length === 0) return;
+
+    const entrada = document.getElementById('respuesta-usuario').value.trim().toLowerCase();
+    const palabraCorrecta = bancoLectura[indiceActual].palabra.toLowerCase();
+    const mensajeDiv = document.getElementById('mensaje');
+
+    if (entrada === palabraCorrecta) {
+      mensajeDiv.style.color = '#385723';
+      mensajeDiv.innerText = '¡Muy bien! 🎉';
+      
+      // Pronuncia la palabra correcta
+      hablar(`¡Muy bien! ${bancoLectura[indiceActual].palabra}`);
+
+      setTimeout(() => {
+        indiceActual = (indiceActual + 1) % bancoLectura.length;
+        cargarEjercicio();
+      }, 1500);
+    } else {
+      mensajeDiv.style.color = '#c65911';
+      mensajeDiv.innerText = 'Inténtalo otra vez 💪';
+      
+      hablar('Inténtalo otra vez');
+    }
+  }
+
+  // 6. REPRODUCIR AUDIO AL TOCAR LA IMAGEN
+  function leerPalabraActual() {
+    if (bancoLectura.length > 0) {
+      hablar(bancoLectura[indiceActual].palabra);
+    }
+  }
+
+  // 7. ESCUCHAR LA TECLA ENTER
+  document.getElementById('respuesta-usuario').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      comprobarRespuesta();
+    }
+  });
+
+  // 8. INICIAR LA CARGA DE DATOS AL ABRIR LA PÁGINA
+  cargarBancoDatos();
+</script>
 
 </body>
 </html>
