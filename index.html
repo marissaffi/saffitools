@@ -175,7 +175,7 @@
      // Cargar los datos desde el archivo externo lectura.json 
      async function cargarBancoDatos() { 
      try { 
-     const respuesta = await fetch('Lectura.json');
+     const respuesta = await fetch('https://marissaffi.github.io/lectura.json');
       bancoLectura = await respuesta.json(); 
       // Una vez cargados los datos, mostramos la primera palabra 
       cargarEjercicio();
