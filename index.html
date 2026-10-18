@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maquetación Bootstrap</title>
+  <!-- CDN Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .caja-8-1 {
+      background-color: #198754;
+      color: white;
+      min-height: 140px;
+    }
+    .caja-8-2 {
+      background-color: #0dcaf0;
+      color: #212529;
+      min-height: 140px;
+    }
+  </style>
+</head>
+<body>
+
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saffitools - Lectura Dinámica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      background-color: #fbe3d5; /* Fondo cálido similar a tu interfaz */
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Menú lateral */
+    .sidebar {
+      width: 220px;
+      background-color: #f8cbad;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 {
+      color: #8faadc;
+      margin-top: 0;
+      text-align: center;
+    }
+    .sidebar button {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffffff;
+      color: #444;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .sidebar button:hover {
+      background-color: #f4b183;
+      color: white;
+    }
+
+    /* Área central de juego */
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 420px;
+      width: 100%;
+    }
+    .categoria-badge {
+      background-color: #fff2cc;
+      color: #d68000;
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    .imagen-contenedor img {
+      width: 200px;
+      height: 180px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+    .card input {
+      width: 80%;
+      padding: 12px;
+      font-size: 24px;
+      text-align: center;
+      border: 3px solid #8faadc;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      outline: none;
+      text-transform: lowercase;
+    }
+    .card button.btn-comprobar {
+      padding: 12px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #70ad47;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .card button.btn-comprobar:hover {
+      background-color: #548235;
+    }
+    .mensaje {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menú Lateral -->
+  <div class="sidebar">
+    <h2>Saffitools</h2>
+    <button onclick="alert('Ir a Menú')">🏠 Menú</button>
+    <button onclick="alert('Ir a Sumar')">➕ Sumar</button>
+    <button onclick="alert('Ir a Lectura')">📖 Lectura</button>
+  </div>
+
+  <!-- Contenido Principal (Tarjeta Interactiva) -->
+  <div class="main-content">
+    <div class="card">
+      <span id="categoria" class="categoria-badge">Categoría</span>
+      <div class="imagen-contenedor">
+        <img id="imagen-ejercicio" src="" alt="Ejercicio">
+      </div>
+      <input type="text" id="respuesta-usuario" placeholder="Escribe aquí..." autocomplete="off">
+      <br>
+      <button class="btn-comprobar" onclick="comprobarRespuesta()">Comprobar</button>
+      <div id="mensaje" class="mensaje"></div>
+    </div>
+  </div>
+
+  <script>
+    // 1. BANCO DE DATOS EN FORMATO JSON
+    // (En la versión final, esto se lee desde el archivo 'lectura.json')
+  
+
+    // 2. FUNCIÓN PARA CARGAR LA PALABRA ACTUAL
+    function cargarEjercicio() {
+     let bancoLectura = []; 
+     let indiceActual = 0; 
+     // Cargar los datos desde el archivo externo lectura.json 
+     async function cargarBancoDatos() { 
+     try { 
+     const respuesta = await fetch('Lectura.json');
+      bancoLectura = await respuesta.json(); 
+      // Una vez cargados los datos, mostramos la primera palabra 
+      cargarEjercicio();
+       }
+       catch (error) {
+        console.error("Error cargando el archivo JSON:", error); } } 
+        // Cargar palabra en la pantalla 
+        function cargarEjercicio() { 
+        if (bancoLectura.length === 0) return; 
+        const ejercicio = bancoLectura[indiceActual]; 
+        document.getElementById('categoria').innerText = ejercicio.categoria; 
+        document.getElementById('imagen-ejercicio').src = ejercicio.imagen; 
+        document.getElementById('respuesta-usuario').value = ''; document.getElementById('mensaje').innerText = ''; 
+        documentgetElementById('respuesta-usuario').focus(); } 
+        // Evaluar la respuesta del niño
+        function comprobarRespuesta() { 
+        const entrada = document.getElementById('respuesta-usuario').value.trim().toLowerCase(); 
+        const palabraCorrecta = bancoLectura[indiceActual].palabra.toLowerCase();
+         const mensajeDiv = document.getElementById('mensaje'); 
+         if (entrada === palabraCorrecta) {
+          mensajeDiv.style.color = '#385723'; 
+          mensajeDiv.innerText = '¡Muy bien! 🎉'; 
+          setTimeout(() =&gt; 
+          { indiceActual = (indiceActual + 1) % bancoLectura.length; cargarEjercicio(); }, 1200);
+           } else { mensajeDiv.style.color = '#c65911'; mensajeDiv.innerText = 'Inténtalo otra vez 💪'; } } 
+           document.getElementById('respuesta-usuario').addEventListener('keypress', function(e) { 
+           if (e.key === 'Enter') { comprobarRespuesta(); 
+           } }); // En lugar de llamar directamente a cargarEjercicio(), iniciamos la carga del JSON cargarBancoDatos();
+
+    // Iniciar el primer ejercicio al abrir la página
+    cargarEjercicio();
+  </script>
+
+</body>
+</html>
