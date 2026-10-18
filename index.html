@@ -162,7 +162,7 @@
   async function cargarBancoDatos() {
     try {
       // Ruta relativa para que funcione tanto en local como en GitHub Pages
-      const respuesta = await fetch('./lectura.json');
+      const respuesta = await fetch('./Lectura.json');
 
       if (!respuesta.ok) {
         throw new Error(`No se encontró lectura.json (Error ${respuesta.status})`);
