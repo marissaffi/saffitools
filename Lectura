@@ -1,0 +1,20 @@
+[
+      {
+        "id": 1,
+        "palabra": "avión",
+        "categoria": "Transporte",
+        "imagen": "https://cdn-icons-png.flaticon.com/512/7893/7893988.png"
+      },
+      {
+        "id": 2,
+        "palabra": "pelota",
+        "categoria": "Juguetes",
+        "imagen": "https://cdn-icons-png.flaticon.com/512/3309/3309959.png"
+      },
+      {
+        "id": 3,
+        "palabra": "sol",
+        "categoria": "Naturaleza",
+        "imagen": "https://cdn-icons-png.flaticon.com/512/869/869869.png"
+      }
+    ]
